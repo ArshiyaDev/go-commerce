@@ -1,4 +1,4 @@
-# GoCart 🛒
+# Go-Commerce 🛒
 A simple e-commerce platform built with **Golang** featuring **JWT authentication** and a clean REST API.
 
 ## Features

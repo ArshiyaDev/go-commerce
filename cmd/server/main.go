@@ -1,7 +1,10 @@
 package main
 
 import (
+	"log"
+
 	_ "github.com/ArshiyaDev/go-commerce/cmd/server/docs"
+	"github.com/ArshiyaDev/go-commerce/pkg/db"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -15,6 +18,12 @@ import (
 // @Success      200  {object}  map[string]string
 // @Router       /ping [get]
 func main() {
+
+	if err := db.Init(); err != nil {
+		log.Fatal(err)
+	}
+	defer db.DB.Close()
+
 	r := gin.Default()
 
 	r.GET("/ping", func(c *gin.Context) {

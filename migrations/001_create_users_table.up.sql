@@ -7,6 +7,6 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     status user_status NOT NULL DEFAULT 'inactive',
     tel TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP 
 );

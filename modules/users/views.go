@@ -1,18 +1,18 @@
 package users
 
 import (
-	"context"
 	"net/http"
 
+	"github.com/ArshiyaDev/go-commerce/modules/users/entities"
 	"github.com/gin-gonic/gin"
 )
 
 type View struct {
-	flow *FLow
+	service *Service
 }
 
-func NewView(f *FLow) *View {
-	return &View{flow: f}
+func NewView(s *Service) *View {
+	return &View{service: s}
 }
 
 func (v *View) RegisterRoutes(rg *gin.RouterGroup) {
@@ -23,13 +23,6 @@ func (v *View) RegisterRoutes(rg *gin.RouterGroup) {
 }
 
 // CreateUserRequest represents the request body for creating a user
-type CreateUserRequest struct {
-	Name     string `json:"name" binding:"required" example:"John"`
-	LastName string `json:"last_name" binding:"required" example:"Doe"`
-	Email    string `json:"email" binding:"required,email" example:"john.doe@example.com"`
-	Tel      string `json:"telephone" binding:"required" example:"+1234567890"`
-	Status   Status `json:"status" binding:"required" example:"active"`
-}
 
 // CreateUserResponse represents the response for user creation
 type CreateUserResponse struct {
@@ -52,19 +45,28 @@ type ErrorResponse struct {
 // @Failure 400 {object} ErrorResponse "Invalid request body or validation error"
 // @Failure 500 {object} ErrorResponse "Internal server error"
 // @Router /users [post]
-func (f *View) createUser(c *gin.Context) {
-	var input CreateUserRequest
+func (h *Service) CreateUser(c *gin.Context) {
+	name := c.Query("name") // returns empty string if not provided
+	lastName := c.Query("last_name")
+	email := c.Query("email")
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if name == "" || lastName == "" || email == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name, last_name, and email are required"})
 		return
 	}
 
-	err := f.flow.Insert(context.Background(), input.Name, input.LastName, input.Email, input.Tel, input.Status)
+	user := entities.User{
+		Name:     name,
+		LastName: lastName,
+		Email:    email,
+		Status:   "active", // default
+	}
+
+	id, err := h.service.CreateUser(c.Request.Context(), &user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not create user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "user created"})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }

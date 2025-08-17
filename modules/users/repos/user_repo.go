@@ -1,4 +1,4 @@
-package users
+package repo
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/ArshiyaDev/go-commerce/modules/users/entities"
 	"github.com/google/uuid"
 )
 
@@ -13,11 +14,11 @@ type Repo struct {
 	db *sql.DB
 }
 
-func NewRepo(db *sql.DB) *Repo {
+func NewRepo(db *sql.DB) UserInterface {
 	return &Repo{db: db}
 }
 
-func (r *Repo) Insert(ctx context.Context, user *User) (uuid.UUID, error) {
+func (r *Repo) Insert(ctx context.Context, user *entities.User) (uuid.UUID, error) {
 
 	user.ID = uuid.New()
 	query := `INSERT INTO users (id, name, last_name, email, status, tel, created_at, updated_at)

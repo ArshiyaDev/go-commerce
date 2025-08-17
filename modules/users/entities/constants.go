@@ -1,4 +1,5 @@
-package users
+// Package users provides functionality for managing users in the system.
+package entities
 
 type Status string
 

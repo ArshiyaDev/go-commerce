@@ -1,0 +1,14 @@
+{
+  "go.toolsManagement.autoUpdate": true,
+
+  "gopls": {
+    "ui.completion.usePlaceholders": true,
+    "ui.completion.experimentalPostfixCompletions": true,
+    "ui.diagnostic.staticcheck": true,
+    "ui.importShortcut": "Both"
+  },
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}

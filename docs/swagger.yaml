@@ -1,0 +1,79 @@
+definitions:
+  controller.Response:
+    properties:
+      code:
+        type: integer
+      status:
+        type: string
+    type: object
+  entities.CreateUserRequest:
+    properties:
+      email:
+        example: john.doe@example.com
+        type: string
+      last_name:
+        example: Doe
+        type: string
+      name:
+        example: John
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.Status'
+        example: active
+      telephone:
+        example: "+1234567890"
+        type: string
+    required:
+    - email
+    - last_name
+    - name
+    - status
+    - telephone
+    type: object
+  entities.Status:
+    enum:
+    - active
+    - inactive
+    - verified
+    - suspend
+    type: string
+    x-enum-varnames:
+    - Active
+    - Inactive
+    - Verified
+    - Suspend
+info:
+  contact: {}
+paths:
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Create a user with name, last name, email, and telephone
+      parameters:
+      - description: Create User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entities.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.Response'
+      summary: Create a new user
+      tags:
+      - users
+swagger: "2.0"

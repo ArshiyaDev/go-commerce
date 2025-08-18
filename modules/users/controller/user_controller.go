@@ -16,6 +16,17 @@ func NewUserController(service users.UserService) *UserController {
 	return &UserController{userService: service}
 }
 
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a user with name, last name, email, and telephone
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body entities.CreateUserRequest true "Create User Request"
+// @Success 200 {object} Response
+// @Failure 400 {object} Response
+// @Failure 500 {object} Response
+// @Router /api/v1/users [post]
 func (controller *UserController) Create(ctx *gin.Context) {
 
 	createUserReq := entities.CreateUserRequest{}
@@ -25,8 +36,8 @@ func (controller *UserController) Create(ctx *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	controller.userService.CreateUser(
-		, Name string, LastName string, Email string, Tel string)
+	controller.userService.CreateUser(ctx,
+		createUserReq.Name, createUserReq.LastName, createUserReq.Email, createUserReq.Tel)
 
 	webResponse := Response{Code: http.StatusOK, Status: "Ok"}
 	ctx.Header("Content-Type", "application/json")

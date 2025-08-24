@@ -37,3 +37,8 @@ func (s *UserService) CreateUser(
 	return s.userRepo.Insert(ctx, &u)
 
 }
+
+func (s *UserService) GetByUsername(ctx context.Context, email string) (*entities.User, error) {
+
+	return s.userRepo.GetByUsername(ctx, email)
+}

@@ -9,4 +9,5 @@ import (
 
 type UserInterface interface {
 	Insert(ctx context.Context, user *entities.User) (uuid.UUID, error)
+	GetByUsername(ctx context.Context, email string) (*entities.User, error)
 }

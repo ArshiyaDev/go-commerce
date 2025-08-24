@@ -43,6 +43,26 @@ definitions:
     - Inactive
     - Verified
     - Suspend
+  entities.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        description: Need Validation for email format
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+      status:
+        $ref: '#/definitions/entities.Status'
+      telephone:
+        type: string
+      updated_at:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -74,6 +94,35 @@ paths:
           schema:
             $ref: '#/definitions/controller.Response'
       summary: Create a new user
+      tags:
+      - users
+  /api/v1/users/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by their username
+      parameters:
+      - description: Email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.Response'
+      summary: Get user by username
       tags:
       - users
 swagger: "2.0"

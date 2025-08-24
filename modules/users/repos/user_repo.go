@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -41,13 +42,54 @@ func (r *Repo) Insert(ctx context.Context, user *entities.User) (uuid.UUID, erro
 
 	}
 
-	// if err != nil {
-	// 	// Check for UNIQUE constraint violation (email)
-	// 	if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-	// 		return uuid.UUID{}, fmt.Errorf("email already exists: %s", user.Email)
-	// 	}
-	// 	return uuid.UUID{}, fmt.Errorf("failed to insert user: %w", err)
-	// }
-
 	return user.ID, nil
+}
+func (r *Repo) GetById(ctx context.Context, id uuid.UUID) (*entities.User, error) {
+	query := `SELECT id, name, last_name, email, status, tel, created_at, updated_at 
+	          FROM users WHERE id = $1 LIMIT 1`
+
+	var user entities.User
+	err := r.db.QueryRowContext(ctx, query, id).Scan(
+		&user.ID,
+		&user.Name,
+		&user.LastName,
+		&user.Email,
+		&user.Status,
+		&user.Tel,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *Repo) GetByUsername(ctx context.Context, email string) (*entities.User, error) {
+	query := `SELECT id, name, last_name, email, status, tel, created_at, updated_at 
+	          FROM users WHERE email = $1 LIMIT 1`
+
+	var user entities.User
+	err := r.db.QueryRowContext(ctx, query, email).Scan(
+		&user.ID,
+		&user.Name,
+		&user.LastName,
+		&user.Email,
+		&user.Status,
+		&user.Tel,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	fmt.Println(err)
+	return &user, nil
 }

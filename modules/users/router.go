@@ -10,6 +10,7 @@ func RegisterRoutes(rg *gin.RouterGroup, controller *controller.UserController) 
 	users := rg.Group("/users")
 	{
 		users.POST("", controller.Create)
+		users.GET("", controller.GetUserByUsername)
 	}
 
 }
